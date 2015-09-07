@@ -256,15 +256,15 @@ systemctl start nginx.service
 ````
 
 #### Confirmation
-
+	
 Visit __http://"PALallaxIP"__
 
 ### 6:Tips
 
 - Default user/password for basic authentication for kibana4 is "admin"/"admin"
+- When you connect the TCP 5601, basic authentication does not work. Please close TCP 5601 in firewall(e.g. firewalld,iptables).
 - If SELinux is Enforcing Setting, it may fail to proxy\_path from NGINX to KIBANA. Allow proxy\_path, or please disable/permissive the SELinux.
 - Increase the file descriptors (FD) value.
-
 	Edit the following files.
 
 	> /etc/security/limits.conf
@@ -275,7 +275,6 @@ Visit __http://"PALallaxIP"__
 
 
 - deletion of index is possible in "curator"
-
 	Example:
 
 	The following is the command to delete all index .
