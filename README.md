@@ -56,7 +56,7 @@ Features of PALallax is as follows.
 
 ## Diagram
 
-![](https://raw.githubusercontent.com/ap-communications/PALallax/readme/images/palallax_overviews.jpg)
+![](https://raw.githubusercontent.com/ap-communications/PALallax/master/images/palallax_overviews.jpg)
 
 
 ## Tested Platforms
