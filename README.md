@@ -18,32 +18,6 @@ Viewable information is as follows.
 - System Temperature
 - Fan Rotation Frequency
 
-__NOTE:__
-
-For software improvement, PALallax sends the information that matches the conditions to AP COMMUNICATIONS CO.,LTD. by __default__ .
-Information to be transmitted are as follows:
-
-- Source IP
-- Destination IP
-- Threat type(Medium and over)
-- Destination Port
-- Threat Direction
-- Country
-- GEOHash
-- Threat ID
-- Threat SubType
-
-To stop transmit above informations to the threat collection server, delete or comment-out following `store` section:
-
-````conf
-# config/fluentd/td-agent.conf
-<store>
-  type wsrpc
-  tag elastic.palo.snmp
-  out_exec lib/ws_out_exec.rb
-  uri wss://threatdb.ap-com.co.jp:443
-</store>
-````
 
 ## Feature Overview
 
@@ -257,7 +231,7 @@ systemctl start nginx.service
 ````
 
 #### Confirmation
-	
+
 Visit __http://"PALallaxIP"__
 
 ### 6:Tips
