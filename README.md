@@ -18,6 +18,7 @@ Viewable information is as follows.
 - System Temperature
 - Fan Rotation Frequency
 
+
 ## Feature Overview
 
 Features of PALallax is as follows.
