@@ -14,7 +14,7 @@ module Fluent
           time = time - time % 5
           record0 = {}
           trap.varbind_list.each do | entry |
-            record0[entry.name.inspect.to_json] = entry.value
+            record0[entry.name.inspect.to_json] = entry.value.to_s
           end
           record = key_translate(record0)
           Engine.emit(tag, time,record)
@@ -66,14 +66,35 @@ module Fluent
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.102]\"" then :traffic_start_time
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.103]\"" then :traffic_elapsed
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.104]\"" then :traffic_category
+                when "\"[1.3.6.1.4.1.25461.2.1.3.1.105]\"" then :session_end_reason
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.200]\"" then :threat_id
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.201]\"" then :threat_category
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.202]\"" then :threat_content_type
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.203]\"" then :threat_severity
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.204]\"" then :threat_direction
                 when "\"[1.3.6.1.4.1.25461.2.1.3.1.205]\"" then :url
+                when "\"[1.3.6.1.4.1.25461.2.1.3.1.211]\"" then :x_forwarded_for
+
                 else; nil
                 end
+
+          # severityを数値から変更
+          if key == "\"[1.3.6.1.4.1.25461.2.1.3.1.203]\""
+            value  = case value
+               when "1"   then "informational"
+               when "2"   then "low"
+               when "3"   then "medium"
+               when "4"   then "high"
+               when "5"   then "critical"
+               else; value
+            end
+          end
+
+          # 空のフィールドにnullを挿入(URLフィールド対応)
+          if value == ""
+            value = nil
+          end
+
          if key2.respond_to?(:to_hash)
            value2 = value.send(key2[:func])
            record2[key2[:key]] = value2
