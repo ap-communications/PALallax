@@ -23,7 +23,7 @@ cp -prf indices/fluentd/ elasticsearch-1.4.4/data/elasticsearch/nodes/0/indices/
 ##3:kibana
 \cp -pf config/kibana/kibana.yml kibana4/config/
 
-##4:Fluentd
+##4:Fluentd 
 #Install dependencies for ruby runtime
 wget http://ftp.jaist.ac.jp/pub/Linux/Fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
 rpm -ivh epel-release-6-8.noarch.rpm
@@ -50,6 +50,8 @@ rvm use 2.0.0
 
 gem install fluentd --no-doc --no-ri
 ls -1R vendor/gems/ | grep -v vendor/gems/: | xargs -I{} gem install vendor/gems/{} --no-doc --no-ri
+
+gem install fluent-plugin-elasticsearch  -v 0.8.0
 
 source /etc/profile.d/rvm.sh
 
