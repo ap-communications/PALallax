@@ -38,7 +38,6 @@ yum install --enablerepo=epel libyaml-devel -y
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -L https://get.rvm.io | sudo bash -s stable
 
-gem install fluent-plugin-elasticsearch  -v 0.8.0
 
 #Install ruby on open another terminal
 
@@ -52,6 +51,8 @@ rvm use 2.0.0
 
 gem install fluentd --no-doc --no-ri
 ls -1R vendor/gems/ | grep -v vendor/gems/: | xargs -I{} gem install vendor/gems/{} --no-doc --no-ri
+
+gem install fluent-plugin-elasticsearch  -v 0.8.0
 
 source /etc/profile.d/rvm.sh
 
