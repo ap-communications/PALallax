@@ -1,0 +1,10 @@
+/var/log/PALallax/PALallax_local6_palo.log {
+  compress
+  missingok
+  notifempty
+  daily
+  rotate 30 
+  postrotate
+     /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+  endscript
+}

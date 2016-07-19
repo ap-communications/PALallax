@@ -11,4 +11,4 @@ Please see below for details.
  Japanese [http://www.ap-com.co.jp/ja/paloalto/palallax/](http://www.ap-com.co.jp/ja/paloalto/palallax/)
 
 + Manual:<br>
-[http://www.ap-com.co.jp/ja/paloalto/palallax/manual_en.html](http://www.ap-com.co.jp/ja/paloalto/palallax/manual_en.html)
+[http://www.ap-com.co.jp/ja/paloalto/palallax/manual/index.html](http://www.ap-com.co.jp/ja/paloalto/palallax/manual/index.html)
