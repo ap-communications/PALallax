@@ -30,8 +30,9 @@ mkdir -p /opt/PALallax/elasticsearch
 mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
 
-cp -p PALallax/elasticsearch/heapmemory_set.sh /opt/PALallax/elasticsearch/
-echo "source /opt/PALallax/elasticsearch/heapmemory_set.sh" >> /root/.bash_profile
+echo `PALallax/elasticsearch/heapmemory_set.sh`
+wait
+
 source /root/.bash_profile
 cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
 cp PALallax/system/kibana_log /etc/logrotate.d/
