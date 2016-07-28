@@ -7,4 +7,4 @@ halfmem=`expr \( $halfmem / 500 \) \* 500`
 
 
 #Set heapmemory
-export ES_HEAP_SIZE=$halfmem'm'
+sed -i -e "s/#ES_HEAP_SIZE=2g/ES_HEAP_SIZE=$halfmem/g" /etc/sysconfig/elasticsearch > /dev/null
