@@ -30,9 +30,6 @@ mkdir -p /opt/PALallax/elasticsearch
 mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
 
-echo `PALallax/elasticsearch/heapmemory_set.sh`
-wait
-
 source /root/.bash_profile
 cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
 cp PALallax/system/kibana_log /etc/logrotate.d/
@@ -132,6 +129,9 @@ cp -pf PALallax/kibana/PALallax.png /opt/kibana/optimize/bundles/src/ui/public/i
 \cp -pf PALallax/kibana/elk.ico /opt/kibana/optimize/bundles/src/ui/public/images/
 
 ### Elasticsearch
+echo `PALallax/elasticsearch/heapmemory_set.sh`
+wait
+
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
 
