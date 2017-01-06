@@ -72,13 +72,13 @@ chown kibana:kibana /var/log/kibana
 ## Fluentd
 echo "====Fluentd===="
 
-rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
+#rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
 
 cat <<EOF> /etc/yum.repos.d/td.repo
 [treasuredata]
 name=TreasureData
 baseurl=http://packages.treasuredata.com/2/redhat/\$releasever/\$basearch
-gpgcheck=1
+gpgcheck=0
 gpgkey=https://packages.treasuredata.com/GPG-KEY-td-agent
 EOF
 
