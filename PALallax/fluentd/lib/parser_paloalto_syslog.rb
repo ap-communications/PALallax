@@ -18,16 +18,15 @@ module Fluent
     def parse(text)
       syslog_value = text.split(/(@.?000\s*.+)/,2)
 
-      raise 'Syslog format error' if syslog_value[1].nil?
+      raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
 
-      if syslog_value[1].include?("@000:\"os6.1\"")\
-        || syslog_value[1].include?("@#000:\"os6.1\"")\
-        || syslog_value[1].include?("@000: \"os7.1\"")\
-        || syslog_value[1].include?("@#000: \"os7.1\"")then
+      if %r{@#000:\s?\"os[67].[1]\"} === syslog_value[1]\
+      || %r{@000:\s?\"os[67].[1]\"} === syslog_value[1] then 
 
-        logemit(syslog_value)
+	logemit(syslog_value)
 
-      elsif raise 'Syslog format error'
+      elsif raise "ERR002:syslog format error(version definition error)" 
+
       end
 
     end
@@ -240,7 +239,7 @@ module Fluent
         tag = "syslog_traffic.palo"
 
         else
-         raise 'Syslog format error'
+         raise "ERR003:syslog format error(type definition error)" 
         end
 
      #Log emit
