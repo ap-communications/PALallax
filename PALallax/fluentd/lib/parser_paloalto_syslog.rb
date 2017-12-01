@@ -21,11 +21,11 @@ module Fluent
       raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
 
       if %r{@#000:\s?\"os[67].[1]\"} === syslog_value[1]\
-      || %r{@000:\s?\"os[67].[1]\"} === syslog_value[1] then 
+      || %r{@000:\s?\"os[67].[1]\"} === syslog_value[1] then
 
-	logemit(syslog_value)
+    logemit(syslog_value)
 
-      elsif raise "ERR002:syslog format error(version definition error)" 
+      elsif raise "ERR002:syslog format error(version definition error)"
 
       end
 
@@ -149,14 +149,20 @@ module Fluent
 
             field_hash_threat.each{|key, value|
               record = case value
+                    #receive_time
                     when "@002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                    #time_generated
                     when "@007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                    #misc
                     when "@032" then  exception_handling(syslog_value[1],value,"@033")
+                    #user_agent
                     when "@047" then  exception_handling(syslog_value[1],value,"@048")
+                    #xff
+                    when "@049" then  exception_handling(syslog_value[1],value,"@050")
+                    #referer
                     when "@050" then  exception_handling(syslog_value[1],value,"@051")
                     when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
               end
-
 
               # recordの中身がnullの場合、空白を代入する。
               # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
@@ -182,9 +188,6 @@ module Fluent
           unless record_value["subtype_threat"] == /url/i then
             case record_value["subtype_threat"]
               when /file/i then
-                  puts record_value["subtype_threat"]
-                    puts record_value["misc_url"]
-                    puts record_value
                     record_value["misc_file"] = record_value["misc_url"]
                     record_value["misc_url"] = nil
                 when /virus/i then
@@ -239,7 +242,7 @@ module Fluent
         tag = "syslog_traffic.palo"
 
         else
-         raise "ERR003:syslog format error(type definition error)" 
+         raise "ERR003:syslog format error(type definition error)"
         end
 
      #Log emit
@@ -257,21 +260,36 @@ module Fluent
 
     #正規表現での抽出で例外が発生する可能性があるフィールドは例外処理をする
     def exception_handling(syslog_value,value,word)
-      word_start = syslog_value.index("#{value}")
-      word_end   = syslog_value.index("#{word}")
-      position   = word_end - word_start
 
-      #先頭のダブルクォートの数に応じて取得する位置を変更する
-      if syslog_value.include?("#{value}:\"\"\"") then
-         syslog_value[word_start + 8,position - 12]
-      elsif syslog_value.include?("#{value}:\"") then
-         syslog_value[word_start + 6,position - 8]
-      else
-         syslog_value[word_start + 5,position - 6]
-      end
+        #処理対象フィールドの開始位置取得
+        word_start = syslog_value.index("#{value}")
+        #処理対象フィールドの終了位置取得（次のフィールドの開始位置取得）
+        word_end  = syslog_value.index("#{word}")
+        #処理対象フィールドの文字数計算
+        position  = word_end - word_start
+
+
+        #先頭のダブルクォートの数に応じて取得する位置を変更する
+        #ダブルクオートが先頭2つの場合
+        if syslog_value.include?("#{value}:\"\"\"") then
+            splitdata = syslog_value[word_start + 8,position - 12]
+        #ダブルクオートが先頭3つの場合
+        elsif syslog_value.include?("#{value}:\"\"") then
+            splitdata = syslog_value[word_start + 7,position - 10]
+        #ダブルクオートが先頭1つの場合
+        elsif syslog_value.include?("#{value}:\"") then
+            splitdata = syslog_value[word_start + 6,position - 8]
+        else
+            return nil
+        end
+
+        if splitdata != nil
+            splitdata.lstrip!
+        end
+
+        return splitdata
     end
 
   end
  end
 end
-

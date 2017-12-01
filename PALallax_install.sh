@@ -8,17 +8,16 @@ echo `date`
 
 # Version definition
 
-elasticsearch_version="elasticsearch-2.3.3"
+elasticsearch_version="elasticsearch-2.4.6"
 java_version="java-1.8.0"
 curator_version="3.5.1"
 fluentd_version="td-agent-2.3.1"
-gem_elastic_version="1.5.0"
+gem_elastic_version="1.11.0"
 gem_polling_version="0.1.5"
 gem_snmp_version="1.2.0"
-gem_fluent_snmp_version="0.0.8"
-kibana_version="kibana-4.5.1"
+gem_fluent_snmp_version="0.0.9"
+kibana_version="kibana-4.6.6"
 nginx_version="nginx-1.10.1"
-
 
 # Preparation
 
@@ -58,9 +57,9 @@ yum -y install $java_version
 echo "====kibana===="
 
 cat <<EOF> /etc/yum.repos.d/kibana.repo
-[kibana-4.5]
-name=Kibana repository for 4.5.x packages
-baseurl=http://packages.elastic.co/kibana/4.5/centos
+[kibana-4.6]
+name=Kibana repository for 4.6.x packages
+baseurl=http://packages.elastic.co/kibana/4.6/centos
 gpgcheck=1
 gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
 enabled=1
@@ -91,15 +90,15 @@ echo "====Fluentd Plugin===="
 td-agent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
 td-agent-gem install polling  -v $gem_polling_version
 td-agent-gem install snmp -v $gem_snmp_version
-td-agent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version 
- 
- 
+td-agent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
+
+
 ## curator
 echo "====curator===="
 
 curl -kL https://bootstrap.pypa.io/get-pip.py | python
 pip install elasticsearch-curator==$curator_version
- 
+
 ## nginx
 echo "====nginx===="
 
@@ -124,7 +123,7 @@ cp -pf /opt/kibana/src/ui/views/ui_app.jade /opt/kibana/src/ui/views/ui_app.jade
 cp -pf /opt/kibana/src/ui/views/chrome.jade /opt/kibana/src/ui/views/chrome.jade.`date '+%Y%m%d'`
 \cp -pf PALallax/kibana/chrome.jade /opt/kibana/src/ui/views/
 cp -pf /opt/kibana/optimize/bundles/kibana.bundle.js /opt/kibana/optimize/bundles/kibana.bundle.js.`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/kibana.bundle.js /opt/kibana/optimize/bundles/ 
+\cp -pf PALallax/kibana/kibana.bundle.js /opt/kibana/optimize/bundles/
 cp -pf PALallax/kibana/PALallax.png /opt/kibana/optimize/bundles/src/ui/public/images/
 \cp -pf PALallax/kibana/elk.ico /opt/kibana/optimize/bundles/src/ui/public/images/
 
@@ -138,15 +137,17 @@ chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
 ### Fluentd
 \cp -pf PALallax/fluentd/config/td-agent.conf /etc/td-agent/td-agent.conf
 \cp -pf PALallax/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
-\cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/ 
+\cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/
 
 sed -i -e "s/TD_AGENT_USER=td-agent/TD_AGENT_USER=root/g" /etc/init.d/td-agent
 sed -i -e "s/TD_AGENT_GROUP=td-agent/TD_AGENT_GROUP=root/g" /etc/init.d/td-agent
 
 ### nginx
 cp -p /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.`date '+%Y%m%d'`
+cp -p /etc/nginx/nginx.conf /etc/nginx/nginx.conf.`date '+%Y%m%d'`
 cp -p PALallax/nginx/config/.htpasswd /etc/nginx/conf.d/.htpasswd
 \cp -pf PALallax/nginx/config/default.conf /etc/nginx/conf.d/default.conf
+\cp -pf PALallax/nginx/config/nginx.conf /etc/nginx/nginx.conf
 
 
 ## SELinux Setting
@@ -210,7 +211,7 @@ curl -XPUT 'http://localhost:9200/_snapshot/PALallax_snapshot' -d '{
         "compress": true
     }
 }'
- 
+
 curl -XPOST localhost:9200/_snapshot/PALallax_snapshot/snapshot_kibana/_restore
 
 echo `PALallax/PALallax_format.sh`
