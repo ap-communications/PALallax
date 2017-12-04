@@ -1,4 +1,4 @@
-/var/log/kibana/PALallax_kibana_log {
+/var/log/td-agent/td-agent.log {
   compress
   missingok
   notifempty

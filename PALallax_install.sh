@@ -25,13 +25,20 @@ echo "====Preparation===="
 
 mkdir /var/log/PALallax
 mkdir -p /opt/PALallax/fluentd/lib
-mkdir -p /opt/PALallax/elasticsearch
+mkdir -p /var/log/elasticsearch/
 mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
 
 source /root/.bash_profile
 cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
+cp PALallax/system/PALallax_cron_log /etc/logrotate.d/
 cp PALallax/system/kibana_log /etc/logrotate.d/
+cp PALallax/system/td-agent_log /etc/logrotate.d/
+cp PALallax/system/nginx_log /etc/logrotate.d/
+
+cp PALallax/system/db_open.sh /opt/PALallax/
+cp /PALallax/system/cron_file /opt/PALallax/
+
 cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
 \cp -f PALallax/system/rsyslog.conf /etc/rsyslog.conf
 systemctl restart rsyslog
@@ -133,6 +140,8 @@ wait
 
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
+chown elasticsearch:elasticsearch /var/log/elasticsearch/
+chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 
 ### Fluentd
 \cp -pf PALallax/fluentd/config/td-agent.conf /etc/td-agent/td-agent.conf
@@ -191,7 +200,7 @@ sed -i -e "/^# End of file$/i * soft nofile 65536\n* hard nofile 65536" /etc/sec
 
 # Disable yum update
 
-echo exclude=td-agent* kibana* elasticsearch* nginx* >> /etc/yum.conf
+echo exclude=td-agent* kibana* elasticsearch* nginx* java* >> /etc/yum.conf
 
 # PALallax database copy
 echo "====PALallax database copy===="
@@ -216,6 +225,10 @@ curl -XPOST localhost:9200/_snapshot/PALallax_snapshot/snapshot_kibana/_restore
 
 echo `PALallax/PALallax_format.sh`
 wait
+
+## Logrotate Settings
+
+
 
 
 # Auto start
