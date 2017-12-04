@@ -28,6 +28,7 @@ mkdir -p /opt/PALallax/fluentd/lib
 mkdir -p /var/log/elasticsearch/
 mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
+mkdir  /var/log/PALallax_cron
 
 source /root/.bash_profile
 cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
@@ -37,7 +38,10 @@ cp PALallax/system/td-agent_log /etc/logrotate.d/
 cp PALallax/system/nginx_log /etc/logrotate.d/
 
 cp PALallax/system/db_open.sh /opt/PALallax/
-cp /PALallax/system/cron_file /opt/PALallax/
+cp -R PALallax/system/cron_file /opt/PALallax/
+chmod 711 /opt/PALallax/db_open.sh
+chmod -R 711 /opt/PALallax/cron_file
+
 
 cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
 \cp -f PALallax/system/rsyslog.conf /etc/rsyslog.conf
@@ -139,7 +143,9 @@ echo `PALallax/elasticsearch/heapmemory_set.sh`
 wait
 
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+\cp -ar PALallax/elasticsearch/config/logging.yml /etc/elasticsearch/logging.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
+chown elasticsearch:elasticsearch /etc/elasticsearch/logging.yml
 chown elasticsearch:elasticsearch /var/log/elasticsearch/
 chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 
