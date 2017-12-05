@@ -23,7 +23,7 @@ gem_fluent_snmp_version="0.0.9"
 
 echo "====Preparation===="
 
-#mkdir /var/log/PALallax
+mkdir /var/log/PALallax
 mkdir -p /opt/PALallax/fluentd/lib
 #mkdir -p /var/log/elasticsearch/
 mkdir /var/lib/fluentd_buffer
