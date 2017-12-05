@@ -24,6 +24,7 @@ nginx_version="nginx-1.10.1"
 echo "====Preparation===="
 
 mkdir /var/log/PALallax
+mkdir /opt/PALallax/
 #mkdir -p /opt/PALallax/fluentd/lib
 mkdir -p /var/log/elasticsearch/
 #mkdir /var/lib/fluentd_buffer
@@ -191,9 +192,19 @@ sed -i -e "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config > /dev/
 #</service>
 #EOF
 
+cat <<EOF> /etc/firewalld/services/elasticsearch.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<short>Elasticsearch</short>
+<description>Elasticsearch Data protocol</description>
+<port protocol="tcp" port="9200"/>
+</service>
+EOF
+
 firewall-cmd --reload > /dev/null
 #firewall-cmd --permanent --zone=public --add-service=syslog_tcp > /dev/null
 #firewall-cmd --permanent --zone=public --add-service=syslog_udp > /dev/null
+firewall-cmd --permanent --zone=public --add-service=elasticsearch > /dev/null
 firewall-cmd --permanent --add-service=http > /dev/null
 firewall-cmd --reload > /dev/null
 
