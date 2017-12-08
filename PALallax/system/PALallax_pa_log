@@ -1,4 +1,4 @@
-/var/log/PALallax/PALallax_local6_palo.log {
+/var/log/PALallax/*.log {
   compress
   missingok
   notifempty
