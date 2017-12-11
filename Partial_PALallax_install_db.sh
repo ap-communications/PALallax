@@ -143,7 +143,7 @@ cp -pf PALallax/kibana/PALallax.png /opt/kibana/optimize/bundles/src/ui/public/i
 echo `PALallax/elasticsearch/heapmemory_set.sh`
 wait
 
-\cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+\cp -pf PALallax/elasticsearch/config/Partial_elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 \cp -ar PALallax/elasticsearch/config/logging.yml /etc/elasticsearch/logging.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/logging.yml

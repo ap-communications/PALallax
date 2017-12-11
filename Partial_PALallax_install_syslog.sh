@@ -199,10 +199,10 @@ firewall-cmd --reload > /dev/null
 
 # FileDescriptor Setting
 
-#ulimit -n 65536
+ulimit -n 65536
 
-#\cp -pr /etc/security/limits.conf /etc/security/limits.conf.`date '+%Y%m%d'`
-#sed -i -e "/^# End of file$/i * soft nofile 65536\n* hard nofile 65536" /etc/security/limits.conf
+\cp -pr /etc/security/limits.conf /etc/security/limits.conf.`date '+%Y%m%d'`
+sed -i -e "/^# End of file$/i * soft nofile 65536\n* hard nofile 65536" /etc/security/limits.conf
 
 # Disable yum update
 
