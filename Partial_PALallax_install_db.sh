@@ -32,7 +32,7 @@ mkdir -p /var/log/kibana
 mkdir  /var/log/PALallax_cron
 
 source /root/.bash_profile
-cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
+#cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
 cp PALallax/system/PALallax_cron_log /etc/logrotate.d/
 cp PALallax/system/kibana_log /etc/logrotate.d/
 #cp PALallax/system/td-agent_log /etc/logrotate.d/
@@ -44,9 +44,9 @@ chmod 711 /opt/PALallax/db_open.sh
 chmod -R 711 /opt/PALallax/cron_file
 
 
-#cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
-#\cp -f PALallax/system/rsyslog.conf /etc/rsyslog.conf
-#systemctl restart rsyslog
+cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
+\cp -f PALallax/system/rsyslog_db.conf /etc/rsyslog.conf
+systemctl restart rsyslog
 
 
 ## Elasticsearch

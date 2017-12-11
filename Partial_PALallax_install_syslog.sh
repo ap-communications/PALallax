@@ -31,7 +31,7 @@ mkdir /var/lib/fluentd_buffer
 #mkdir  /var/log/PALallax_cron
 
 source /root/.bash_profile
-#cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
+cp PALallax/system/PALallax_pa_log /etc/logrotate.d/
 #cp PALallax/system/PALallax_cron_log /etc/logrotate.d/
 #cp PALallax/system/kibana_log /etc/logrotate.d/
 cp PALallax/system/td-agent_log /etc/logrotate.d/
@@ -44,7 +44,7 @@ cp PALallax/system/td-agent_log /etc/logrotate.d/
 
 
 cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
-\cp -f PALallax/system/rsyslog.conf /etc/rsyslog.conf
+\cp -f PALallax/system/rsyslog_syslog.conf /etc/rsyslog.conf
 systemctl restart rsyslog
 
 
