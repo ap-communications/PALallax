@@ -59,36 +59,36 @@ curl -XPUT localhost:9200/_template/template_01 -d '
         "filedigest": {"type":"string","index":"not_analyzed"},
         "filetype": {"type":"string","index":"not_analyzed"},
         "misc_file": {"type":"string","index":"not_analyzed"},
-        "misc_url": {"type":"string","index":"not_analyzed"},
-        "misc_virus": {"type":"string","index":"not_analyzed"},
-        "misc_wildfire": {"type":"string","index":"not_analyzed"},
-        "pcap_id": {"type":"string","index":"not_analyzed"},
-        "recipient": {"type":"string","index":"not_analyzed"},
-        "referer": {"type":"string","index":"not_analyzed"},
-        "reportid": {"type":"string","index":"not_analyzed"},
-        "sender": {"type":"string","index":"not_analyzed"},
-        "severity": {"type":"string","index":"not_analyzed"},
-        "subject": {"type":"string","index":"not_analyzed"},
-        "subtype_threat": {"type":"string","index":"not_analyzed"},
-        "threatid": {"type":"string","index":"not_analyzed"},
-        "user_agent": {"type":"string","index":"not_analyzed"},
-        "wildfire_result": {"type":"string","index":"not_analyzed"},
-        "xff": {"type":"string","index":"not_analyzed"},
-        "vsys_name": {"type":"string","index":"not_analyzed"},
-        "device_name": {"type":"string","index":"not_analyzed"},
-        "action_source": {"type":"string","index":"not_analyzed"}
-       }
-    }
-  }
-}
-'
-
-curl -XPUT localhost:9200/_template/template_02 -d '
-{
-  "template" : "palo_system_*",
-  "settings" : {
-    "number_of_shards" : 5,
-    "number_of_replicas" : 0
-  }
+       "misc_url": {"type":"string","index":"not_analyzed"},
+       "misc_virus": {"type":"string","index":"not_analyzed"},
+       "misc_wildfire": {"type":"string","index":"not_analyzed"},
+       "pcap_id": {"type":"string","index":"not_analyzed"},
+       "recipient": {"type":"string","index":"not_analyzed"},
+       "referer": {"type":"string","index":"not_analyzed"},
+       "reportid": {"type":"string","index":"not_analyzed"},
+       "sender": {"type":"string","index":"not_analyzed"},
+       "severity": {"type":"string","index":"not_analyzed"},
+       "subject": {"type":"string","index":"not_analyzed"},
+       "subtype_threat": {"type":"string","index":"not_analyzed"},
+       "threatid": {"type":"string","index":"not_analyzed"},
+       "user_agent": {"type":"string","index":"not_analyzed"},
+       "wildfire_result": {"type":"string","index":"not_analyzed"},
+       "xff": {"type":"string","index":"not_analyzed"},
+       "vsys_name": {"type":"string","index":"not_analyzed"},
+       "device_name": {"type":"string","index":"not_analyzed"},
+       "action_source": {"type":"string","index":"not_analyzed"},
+       "source_vm_uuid": {"type":"string","index":"not_analyzed"},
+       "destination_vm_uuid": {"type":"string","index":"not_analyzed"},
+       "http_method": {"type":"string","index":"not_analyzed"},
+       "tunnel_id_imsi": {"type":"string","index":"not_analyzed"},
+       "monitor_tag_imei": {"type":"string","index":"not_analyzed"},
+       "parent_session_id": {"type":"string","index":"not_analyzed"},
+       "parent_start_time": {"type":"string","index":"not_analyzed"},
+       "tunnel_type": {"type":"string","index":"not_analyzed"},
+       "threat_category": {"type":"string","index":"not_analyzed"},
+       "content_version": {"type":"string","index":"not_analyzed"}
+      }
+   }
+ }
 }
 '
