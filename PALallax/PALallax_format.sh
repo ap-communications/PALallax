@@ -9,6 +9,13 @@ curl -XPUT localhost:9200/_template/template_01 -d '
   },
   "mappings" : {
     "_default_" : {
+      "dynamic_templates": [{
+        "defaultmapping_notanalyzed": {
+          "match": "*",
+          "match_mapping_type": "string",
+          "mapping": {"type": "string", "index": "not_analyzed"}
+        }
+      }],
      "properties": {
         "hostname": {"type":"string","index":"not_analyzed"},
         "receive_time": {"type":"date","format":"strict_date_optional_time||epoch_second"},
