@@ -265,7 +265,7 @@ module Fluent
 
 
     #debug
-    record_value["debug"] = syslog_value
+    #record_value["debug"] = syslog_value
 
 
      #Log emit
