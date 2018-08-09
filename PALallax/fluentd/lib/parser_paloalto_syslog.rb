@@ -1,4 +1,5 @@
 # coding: utf-8
+# PAN-OS 8.0対応
 
 module Fluent
  class TextParser
@@ -20,8 +21,8 @@ module Fluent
 
       raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
 
-      if %r{@#000:\s?\"os[67].[1]\"} === syslog_value[1]\
-      || %r{@000:\s?\"os[67].[1]\"} === syslog_value[1] then
+      if %r{@#000:\s?\"os[678].[01]\"} === syslog_value[1]\
+      || %r{@000:\s?\"os[678].[01]\"} === syslog_value[1] then
 
     logemit(syslog_value)
 
@@ -87,7 +88,17 @@ module Fluent
         "recipient" => "@053",
         "reportid" => "@054",
         "vsys_name" => "@055",
-        "device_name" => "@056"
+        "device_name" => "@056",
+        "source_vm_uuid" => "@057",
+        "destination_vm_uuid" => "@058",
+        "http_method" => "@059",
+        "tunnel_id_imsi" => "@060",
+        "monitor_tag_imei" => "@061",
+        "parent_session_id" => "@062",
+        "parent_start_time" => "@063",
+        "tunnel_type" => "@064",
+        "threat_category" => "@065",
+        "content_version" => "@066"
 
        }
 
@@ -136,7 +147,14 @@ module Fluent
         "session_end_reason" => "@#047",
         "vsys_name" => "@#048",
         "device_name" => "@#049",
-        "action_source" => "@#050"
+        "action_source" => "@#050",
+        "source_vm_uuid" => "@#051",
+        "destination_vm_uuid" => "@#052",
+        "tunnel_id_imsi" => "@#053",
+        "monitor_tag_imei" => "@#054",
+        "parent_session_id" => "@#055",
+        "parent_start_time" => "@#056",
+        "tunnel_type" => "@#057"
 
        }
 
@@ -244,6 +262,11 @@ module Fluent
         else
          raise "ERR003:syslog format error(type definition error)"
         end
+
+
+    #debug
+    #record_value["debug"] = syslog_value
+
 
      #Log emit
      time = Engine.now
