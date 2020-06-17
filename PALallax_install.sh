@@ -12,7 +12,7 @@ elasticsearch_version="elasticsearch-7.7.1"
 java_version="java-1.8.0"
 curator_version="elasticsearch-curator-5.8.1"
 fluentd_version="td-agent-2.5.0"
-gem_elastic_version="1.11.0"
+gem_elastic_version="1.18.2"
 gem_polling_version="0.1.5"
 gem_snmp_version="1.2.0"
 gem_fluent_snmp_version="0.0.9"
@@ -102,10 +102,10 @@ EOF
 ## Fluentd Plugin
 echo "====Fluentd Plugin===="
 
-#td-agent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
-#td-agent-gem install polling  -v $gem_polling_version
-#td-agent-gem install snmp -v $gem_snmp_version
-#td-agent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
+#/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
+#/opt/td-agent/embedded/bin/fluent-gem install polling  -v $gem_polling_version
+#/opt/td-agent/embedded/bin/fluent-gem install snmp -v $gem_snmp_version
+#/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
 
 
 ## curator
@@ -126,11 +126,13 @@ yum install -y $curator_version
 echo "====nginx===="
 
 cat <<EOF> /etc/yum.repos.d/nginx.repo
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/centos/7/x86_64/
-gpgcheck=0
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch
+gpgcheck=1
 enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
 EOF
 
 yum install -y --enablerepo=nginx $nginx_version
