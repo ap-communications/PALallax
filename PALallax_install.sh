@@ -17,7 +17,7 @@ gem_polling_version="0.1.5"
 gem_snmp_version="1.2.0"
 gem_fluent_snmp_version="0.0.9"
 kibana_version="kibana-7.7.1"
-nginx_version="nginx-1.18.1"
+nginx_version="nginx-1.18.0"
 
 # Preparation
 
