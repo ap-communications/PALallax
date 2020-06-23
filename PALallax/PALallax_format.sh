@@ -93,7 +93,14 @@ curl -X PUT "localhost:9200/_template/template_01?pretty" -H 'Content-Type: appl
       "parent_start_time": {"type":"keyword","index":"false"},
       "tunnel_type": {"type":"keyword","index":"false"},
       "threat_category": {"type":"keyword","index":"false"},
-      "content_version": {"type":"keyword","index":"false"}
+      "content_version": {"type":"keyword","index":"false"},
+      "sctp_association_id": {"type":"keyword","index":"false"},
+      "payload_protocol_id": {"type":"keyword","index":"false"},
+      "http_headers": {"type":"keyword","index":"false"},
+      "url_category_list": {"type":"keyword","index":"false"},
+      "rule_uuid": {"type":"keyword","index":"false"},
+      "http2_connection": {"type":"keyword","index":"false"},
+      "dynamic_usergroup_name": {"type":"keyword","index":"false"}
     }
   }
 }
