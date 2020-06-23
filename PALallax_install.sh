@@ -24,9 +24,9 @@ nginx_version="nginx-1.18.0"
 echo "====Preparation===="
 
 mkdir /var/log/PALallax
-#mkdir -p /opt/PALallax/fluentd/lib
+mkdir -p /opt/PALallax/fluentd/lib
 mkdir -p /var/log/elasticsearch/
-#mkdir /var/lib/fluentd_buffer
+mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
 mkdir  /var/log/PALallax_cron
 
@@ -96,16 +96,16 @@ gpgcheck=1
 gpgkey=https://packages.treasuredata.com/GPG-KEY-td-agent
 EOF
 
-#yum -y install $fluentd_version
-#yum -y install initscripts
+yum -y install $fluentd_version
+yum -y install initscripts
 
 ## Fluentd Plugin
 echo "====Fluentd Plugin===="
 
-#/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
-#/opt/td-agent/embedded/bin/fluent-gem install polling  -v $gem_polling_version
-#/opt/td-agent/embedded/bin/fluent-gem install snmp -v $gem_snmp_version
-#/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
+/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
+/opt/td-agent/embedded/bin/fluent-gem install polling  -v $gem_polling_version
+/opt/td-agent/embedded/bin/fluent-gem install snmp -v $gem_snmp_version
+/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
 
 
 ## curator
@@ -154,12 +154,14 @@ chown elasticsearch:elasticsearch /var/log/elasticsearch/
 chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 
 ### Fluentd
-#\cp -pf PALallax/fluentd/config/td-agent.conf /etc/td-agent/td-agent.conf
-#\cp -pf PALallax/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
-#\cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/
+\cp -pf PALallax/fluentd/config/td-agent.conf /etc/td-agent/td-agent.conf
+\cp -pf PALallax/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
+\cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/
 
 sed -i -e "s/TD_AGENT_USER=td-agent/TD_AGENT_USER=root/g" /etc/init.d/td-agent
 sed -i -e "s/TD_AGENT_GROUP=td-agent/TD_AGENT_GROUP=root/g" /etc/init.d/td-agent
+
+
 
 ### nginx
 cp -p /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.`date '+%Y%m%d'`
