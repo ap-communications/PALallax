@@ -158,10 +158,9 @@ chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 \cp -pf PALallax/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
 \cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/
 
-#sed -i -e "s/TD_AGENT_USER=td-agent/TD_AGENT_USER=root/g" /etc/init.d/td-agent
-#sed -i -e "s/TD_AGENT_GROUP=td-agent/TD_AGENT_GROUP=root/g" /etc/init.d/td-agent
 sed -i -e "s/User=td-agent/User=root/g" /usr/lib/systemd/system/td-agent.service
 sed -i -e "s/Group=td-agent/Group=root/g" /usr/lib/systemd/system/td-agent.service
+sed -i -e "s/config_param :type_name, :string, :default => \"fluentd\"/config_param :type_name, :string, :default => \"_doc\"/g" /opt/td-agent/embedded/lib/ruby/gems/2.5.0/gems/fluent-plugin-elasticsearch-1.18.2/lib/fluent/plugin/out_elasticsearch.rb
 
 ### nginx
 cp -p /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.`date '+%Y%m%d'`
