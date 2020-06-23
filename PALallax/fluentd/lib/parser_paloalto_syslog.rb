@@ -321,7 +321,7 @@ module Fluent
            #Hostname extraction
            record_value["hostname"] = syslog_value[0].split(" ")[3]
  
-           field_hash_traffic.each{|key, value|
+           field_hash_globalprotect.each{|key, value|
  
              record =  case value
                when "@#002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
