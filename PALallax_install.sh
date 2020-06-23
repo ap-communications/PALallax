@@ -143,12 +143,12 @@ echo "====Setting file copy===="
 
 ### kibana
 \cp -pf PALallax/kibana/config/kibana.yml /etc/kibana/kibana.yml
-\cp -p /usr/share/kibana/src/core/server/rendering/views/style.js /usr/share/kibana/src/core/server/rendering/views/style.js`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/style.js /usr/share/kibana/src/core/server/rendering/views/style.js
+\cp -p /usr/share/kibana/src/core/server/rendering/views/styles.js /usr/share/kibana/src/core/server/rendering/views/styles.js`date '+%Y%m%d'`
+\cp -pf PALallax/kibana/styles.js /usr/share/kibana/src/core/server/rendering/views/styles.js
 \cp -p /usr/share/kibana/src/core/server/rendering/views/template.js /usr/share/kibana/src/core/server/rendering/views/template.js`date '+%Y%m%d'`
 \cp -pf PALallax/kibana/template.js /usr/share/kibana/src/core/server/rendering/views/template.js
-\cp -p /usr/share/kibana/src/legacy/ui/public/assets/favicon/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicon/favicon.ico`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicon/favicon.ico
+\cp -p /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico`date '+%Y%m%d'`
+\cp -pf PALallax/kibana/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico
 
 ### Elasticsearch
 echo `PALallax/elasticsearch/heapmemory_set.sh`
