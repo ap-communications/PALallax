@@ -240,10 +240,10 @@ curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type
 }                                                                                                                                                                     
 '                        
 
-#curl -XPOST localhost:9200/_snapshot/PALallax_snapshot/snapshot_kibana/_restore
-
 echo `PALallax/PALallax_format.sh`
 wait
+
+curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/PALallax/kibana/export.ndjson
 
 ## Logrotate Settings
 
