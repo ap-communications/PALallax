@@ -230,6 +230,10 @@ systemctl start elasticsearch.service
 sleep 120s
 systemctl status elasticsearch.service
 
+systemctl start kibana.service
+sleep 120s
+systemctl status kibana.service
+
 curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
 {                                                                                                                                                                     
     "type": "fs",                                                                                                                                                     
@@ -243,7 +247,7 @@ curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type
 echo `PALallax/PALallax_format.sh`
 wait
 
-curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/PALallax/kibana/export.ndjson
+curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/kibana/export.ndjson
 
 ## Logrotate Settings
 
