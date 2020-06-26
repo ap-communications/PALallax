@@ -40,7 +40,7 @@ curl -X PUT "localhost:9200/_template/template_01?pretty" -H 'Content-Type: appl
       "sessionid": {"type":"keyword","index":"false"},
       "repeatcnt": {"type":"integer","index":"false"},
       "sport": {"type":"keyword","index":"false"},
-      "dport": {"type":"keyword","index":"false"},
+      "dport": {"type":"keyword","index":"true"},
       "natsport": {"type":"keyword","index":"false"},
       "natdport": {"type":"keyword","index":"false"},
       "flags": {"type":"keyword","index":"false"},
