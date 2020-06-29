@@ -97,7 +97,8 @@ curl -X PUT "localhost:9200/_template/template_01?pretty" -H 'Content-Type: appl
       "sctp_association_id": {"type":"keyword","index":"true"},
       "payload_protocol_id": {"type":"keyword","index":"true"},
       "http_headers": {"type":"keyword","index":"true"},
-      "url_category_list": {"type":"keyword","index":"true"},
+      "url_category": {"type":"keyword","index":"true"},
+      "url_category_risk": {"type":"keyword","index":"true"},
       "rule_uuid": {"type":"keyword","index":"true"},
       "http2_connection": {"type":"keyword","index":"true"},
       "dynamic_usergroup_name": {"type":"keyword","index":"true"}

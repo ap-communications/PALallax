@@ -102,10 +102,11 @@ module Fluent
          "sctp_association_id" => "@067",
          "payload_protocol_id" => "@068",
          "http_headers" => "@069",
-         "url_category_list" => "@070",
-         "rule_uuid" => "@071",
-         "http2_connection" => "@072",
-         "dynamic_usergroup_name" => "@073"
+         "url_category" => "@070",
+         "url_category_risk" => "@071",
+         "rule_uuid" => "@072",
+         "http2_connection" => "@073",
+         "dynamic_usergroup_name" => "@074"
  
         }
  
@@ -235,6 +236,9 @@ module Fluent
                      when "@049" then  exception_handling(syslog_value[1],value,"@050")
                      #referer
                      when "@050" then  exception_handling(syslog_value[1],value,"@051")
+                     #url_category_list
+                     when "@070" then  perse_category_list(syslog_value[1],value,"@070","@072")
+                     when "@071" then  perse_category_list(syslog_value[1],value,"@070","@072") 
                      when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
                end
  
@@ -401,11 +405,32 @@ module Fluent
  
          return splitdata
      end
- 
-     def perse_category_list(syslog_value)
-      
+     
+     def perse_category_list(syslog_value,value,list_value,word)
+        word_start = syslog_value.index("#{list_value}")
+        word_end  = syslog_value.index("#{word}")
+        position  = word_end - word_start
+
+        if syslog_value.include?("#{list_value}:\"\"")
+          category_list = syslog_value[word_start + 7,position - 10]
+        elsif syslog_value.include?("#{list_value}:\"") then
+          category_list = syslog_value[word_start + 6,position - 8]
+        else
+            return nil
+        end
+
+        splitdata = case value
+            when "@070" then category_list.split(",")[0]
+            when "@071" then category_list.split(",")[1]
+        end
+        
+        if splitdata != nil
+          splitdata.lstrip!
+        end
+
+        return splitdata
      end
- 
+
    end
   end
  end
