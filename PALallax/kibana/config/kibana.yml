@@ -38,7 +38,7 @@
 
 # The default application to load.
 #kibana.defaultAppId: "home"
-kibana.defaultAppId: "dashboard/dfd26620-b5d9-11ea-8a47-f9f0053a9133"
+kibana.defaultAppId: "dashboard/cce1d820-b9df-11ea-8e8c-bba7f880ef97"
 
 # If your Elasticsearch is protected with basic authentication, these settings provide
 # the username and password that the Kibana server uses to perform maintenance on the Kibana
