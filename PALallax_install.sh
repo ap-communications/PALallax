@@ -227,11 +227,11 @@ chown -R elasticsearch:elasticsearch /var/lib/PALallax/backup/
 #cp -pr PALallax/PALallax_db/* /var/lib/PALallax/backup/
 
 systemctl start elasticsearch.service
-sleep 120s
+sleep 180s
 systemctl status elasticsearch.service
 
 systemctl start kibana.service
-sleep 120s
+sleep 180s
 systemctl status kibana.service
 
 curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
