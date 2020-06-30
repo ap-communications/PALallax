@@ -7,5 +7,5 @@ halfmem=`expr \( $halfmem / 100 \) \* 100`
 halfmem=${halfmem}m
 
 #Set heapmemory
-sed -i -e "s/#ES_HEAP_SIZE=2g/ES_HEAP_SIZE=$halfmem/g" /etc/sysconfig/elasticsearch > /dev/null
-
+sed -i -e "s/-Xms1g/-Xms$halfmem/g" /etc/elasticsearch/jvm.options > /dev/null
+sed -i -e "s/-Xmx1g/-Xmx$halfmem/g" /etc/elasticsearch/jvm.options > /dev/null

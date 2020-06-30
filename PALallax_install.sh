@@ -8,16 +8,16 @@ echo `date`
 
 # Version definition
 
-elasticsearch_version="elasticsearch-2.4.6"
+elasticsearch_version="elasticsearch-7.6.0"
 java_version="java-1.8.0"
-curator_version="3.5.1"
-fluentd_version="td-agent-2.3.1"
-gem_elastic_version="1.11.0"
+curator_version="elasticsearch-curator-5.8.1"
+fluentd_version="td-agent-2.5.0"
+gem_elastic_version="1.18.2"
 gem_polling_version="0.1.5"
 gem_snmp_version="1.2.0"
 gem_fluent_snmp_version="0.0.9"
-kibana_version="kibana-4.6.6"
-nginx_version="nginx-1.10.1"
+kibana_version="kibana-7.6.0"
+nginx_version="nginx-1.18.0"
 
 # Preparation
 
@@ -37,9 +37,9 @@ cp PALallax/system/kibana_log /etc/logrotate.d/
 cp PALallax/system/td-agent_log /etc/logrotate.d/
 cp PALallax/system/nginx_log /etc/logrotate.d/
 
-cp PALallax/system/db_open.sh /opt/PALallax/
+#cp PALallax/system/db_open.sh /opt/PALallax/
 cp -R PALallax/system/cron_file /opt/PALallax/
-chmod 711 /opt/PALallax/db_open.sh
+#chmod 711 /opt/PALallax/db_open.sh
 chmod -R 711 /opt/PALallax/cron_file
 
 
@@ -52,12 +52,14 @@ systemctl restart rsyslog
 echo "====Elasticsearch===="
 
 cat <<EOF> /etc/yum.repos.d/elasticsearch.repo
-[elasticsearch-2.x]
-name=Elasticsearch repository for 2.x packages
-baseurl=http://packages.elastic.co/elasticsearch/2.x/centos
+[elasticsearch]
+name=Elasticsearch repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
 gpgcheck=1
-gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 enabled=1
+autorefresh=1
+type=rpm-md
 EOF
 
 yum -y install $elasticsearch_version
@@ -68,12 +70,14 @@ yum -y install $java_version
 echo "====kibana===="
 
 cat <<EOF> /etc/yum.repos.d/kibana.repo
-[kibana-4.6]
-name=Kibana repository for 4.6.x packages
-baseurl=http://packages.elastic.co/kibana/4.6/centos
+[kibana-7.x]
+name=Kibana repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
 gpgcheck=1
-gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 enabled=1
+autorefresh=1
+type=rpm-md
 EOF
 
 yum -y install $kibana_version
@@ -87,8 +91,8 @@ echo "====Fluentd===="
 cat <<EOF> /etc/yum.repos.d/td.repo
 [treasuredata]
 name=TreasureData
-baseurl=http://packages.treasuredata.com/2/redhat/\$releasever/\$basearch
-gpgcheck=0
+baseurl=http://packages.treasuredata.com/2.5/redhat/\$releasever/\$basearch
+gpgcheck=1
 gpgkey=https://packages.treasuredata.com/GPG-KEY-td-agent
 EOF
 
@@ -98,54 +102,60 @@ yum -y install initscripts
 ## Fluentd Plugin
 echo "====Fluentd Plugin===="
 
-td-agent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
-td-agent-gem install polling  -v $gem_polling_version
-td-agent-gem install snmp -v $gem_snmp_version
-td-agent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
+/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
+/opt/td-agent/embedded/bin/fluent-gem install polling  -v $gem_polling_version
+/opt/td-agent/embedded/bin/fluent-gem install snmp -v $gem_snmp_version
+/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
 
 
 ## curator
 echo "====curator===="
 
-curl -kL https://bootstrap.pypa.io/get-pip.py | python
-pip install elasticsearch-curator==$curator_version
+cat <<EOF> /etc/yum.repos.d/curator.repo
+[curator-5]
+name=CentOS/RHEL 7 repository for Elasticsearch Curator 5.x packages
+baseurl=https://packages.elastic.co/curator/5/centos/7
+gpgcheck=1
+gpgkey=https://packages.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+EOF
+
+yum install -y $curator_version
 
 ## nginx
 echo "====nginx===="
 
 cat <<EOF> /etc/yum.repos.d/nginx.repo
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/centos/7/x86_64/
-gpgcheck=0
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch
+gpgcheck=1
 enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
 EOF
 
-yum install -y --enablerepo=nginx $nginx_version
+yum install -y $nginx_version
 yum install -y httpd-tools
 
 ## Setting file copy
 echo "====Setting file copy===="
 
 ### kibana
-\cp -pf PALallax/kibana/config/kibana.yml /opt/kibana/config/kibana.yml
-cp -pf /opt/kibana/src/ui/views/ui_app.jade /opt/kibana/src/ui/views/ui_app.jade.`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/ui_app.jade /opt/kibana/src/ui/views/
-cp -pf /opt/kibana/src/ui/views/chrome.jade /opt/kibana/src/ui/views/chrome.jade.`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/chrome.jade /opt/kibana/src/ui/views/
-cp -pf /opt/kibana/optimize/bundles/kibana.bundle.js /opt/kibana/optimize/bundles/kibana.bundle.js.`date '+%Y%m%d'`
-\cp -pf PALallax/kibana/kibana.bundle.js /opt/kibana/optimize/bundles/
-cp -pf PALallax/kibana/PALallax.png /opt/kibana/optimize/bundles/src/ui/public/images/
-\cp -pf PALallax/kibana/elk.ico /opt/kibana/optimize/bundles/src/ui/public/images/
+\cp -pf PALallax/kibana/config/kibana.yml /etc/kibana/kibana.yml
+\cp -p /usr/share/kibana/src/core/server/rendering/views/styles.js /usr/share/kibana/src/core/server/rendering/views/styles.js`date '+%Y%m%d'`
+\cp -pf PALallax/kibana/styles.js /usr/share/kibana/src/core/server/rendering/views/styles.js
+\cp -p /usr/share/kibana/src/core/server/rendering/views/template.js /usr/share/kibana/src/core/server/rendering/views/template.js`date '+%Y%m%d'`
+\cp -pf PALallax/kibana/template.js /usr/share/kibana/src/core/server/rendering/views/template.js
+\cp -p /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico`date '+%Y%m%d'`
+\cp -pf PALallax/kibana/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico
 
 ### Elasticsearch
 echo `PALallax/elasticsearch/heapmemory_set.sh`
 wait
 
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
-\cp -ar PALallax/elasticsearch/config/logging.yml /etc/elasticsearch/logging.yml
 chown elasticsearch:elasticsearch /etc/elasticsearch/elasticsearch.yml
-chown elasticsearch:elasticsearch /etc/elasticsearch/logging.yml
 chown elasticsearch:elasticsearch /var/log/elasticsearch/
 chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 
@@ -154,8 +164,9 @@ chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 \cp -pf PALallax/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
 \cp -pf PALallax/fluentd/lib/snmp_get_out_exec.rb /opt/PALallax/fluentd/lib/
 
-sed -i -e "s/TD_AGENT_USER=td-agent/TD_AGENT_USER=root/g" /etc/init.d/td-agent
-sed -i -e "s/TD_AGENT_GROUP=td-agent/TD_AGENT_GROUP=root/g" /etc/init.d/td-agent
+sed -i -e "s/User=td-agent/User=root/g" /usr/lib/systemd/system/td-agent.service
+sed -i -e "s/Group=td-agent/Group=root/g" /usr/lib/systemd/system/td-agent.service
+sed -i -e "s/config_param :type_name, :string, :default => \"fluentd\"/config_param :type_name, :string, :default => \"_doc\"/g" /opt/td-agent/embedded/lib/ruby/gems/2.5.0/gems/fluent-plugin-elasticsearch-1.18.2/lib/fluent/plugin/out_elasticsearch.rb
 
 ### nginx
 cp -p /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.`date '+%Y%m%d'`
@@ -213,24 +224,30 @@ echo "====PALallax database copy===="
 
 mkdir -p /var/lib/PALallax/backup
 chown -R elasticsearch:elasticsearch /var/lib/PALallax/backup/
-cp -pr PALallax/PALallax_db/* /var/lib/PALallax/backup/
+#cp -pr PALallax/PALallax_db/* /var/lib/PALallax/backup/
 
 systemctl start elasticsearch.service
-sleep 120s
+sleep 180s
 systemctl status elasticsearch.service
 
-curl -XPUT 'http://localhost:9200/_snapshot/PALallax_snapshot' -d '{
-    "type": "fs",
-    "settings": {
-        "location": "/var/lib/PALallax/backup/",
-        "compress": true
-    }
-}'
+systemctl start kibana.service
+sleep 300s
+systemctl status kibana.service
 
-curl -XPOST localhost:9200/_snapshot/PALallax_snapshot/snapshot_kibana/_restore
+curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
+{                                                                                                                                                                     
+    "type": "fs",                                                                                                                                                     
+    "settings": {                                                                                                                                                     
+        "location": "/var/lib/PALallax/backup/",                                                                                                                      
+        "compress": true                                                                                                                                              
+    }                                                                                                                                                                 
+}                                                                                                                                                                     
+'                        
 
 echo `PALallax/PALallax_format.sh`
 wait
+
+curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/kibana/export.ndjson
 
 ## Logrotate Settings
 
