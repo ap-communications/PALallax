@@ -231,7 +231,7 @@ sleep 180s
 systemctl status elasticsearch.service
 
 systemctl start kibana.service
-sleep 180s
+sleep 300s
 systemctl status kibana.service
 
 curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
