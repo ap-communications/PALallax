@@ -237,8 +237,8 @@ module Fluent
                      #referer
                      when "@050" then  exception_handling(syslog_value[1],value,"@051")
                      #url_category_list
-                     when "@070" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@070")
-                     when "@071" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@071")
+                     when "@070" then  perse_category_list(syslog_value[1],value,"@070","@072")
+                     when "@071" then  perse_category_list(syslog_value[1],value,"@070","@072") 
                      when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
                end
  
