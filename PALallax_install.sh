@@ -151,7 +151,7 @@ echo "====Setting file copy===="
 \cp -pf PALallax/kibana/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico
 
 ### Elasticsearch
-echo `PALallax/elasticsearch/heapmemory_set.sh`
+echo `PALallax/elasticsearch/jvmoptions_set.sh`
 wait
 
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
