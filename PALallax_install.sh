@@ -234,7 +234,7 @@ systemctl start kibana.service
 sleep 300s
 systemctl status kibana.service
 
-curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
+echo `curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
 {                                                                                                                                                                     
     "type": "fs",                                                                                                                                                     
     "settings": {                                                                                                                                                     
@@ -242,18 +242,21 @@ curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type
         "compress": true                                                                                                                                              
     }                                                                                                                                                                 
 }                                                                                                                                                                     
-'                        
+'`
+
 
 echo `PALallax/PALallax_format.sh`
-wait
+
+sleep 60s
+
+## Kibana Settings
 
 curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/kibana/export.ndjson
+wait
 
-curl -H "kbn-xsrf: reporting" -H 'Content-Type: application/json' -X PUT "http://localhost:5601/api/spaces/space/default" -d '{
-"id": "default",
-"name": "Default",
-"disabledFeatures": ["apm","maps","canvas","infrastructure","logs","siem","uptime","monitoring","dev_tools","ml","graph"]
-}'
+echo `PALallax/kibana_setting.sh`
+wait
+
 
 ## Logrotate Settings
 
