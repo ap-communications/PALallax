@@ -149,7 +149,31 @@ curl -X PUT "localhost:9200/_template/template_01?pretty" -H 'Content-Type: appl
       "partial_hash": {"type":"keyword","index":"true"},
       "reason": {"type":"keyword","index":"true"},
       "justification": {"type":"keyword","index":"true"},
-      "nssai_sst": {"type":"keyword","index":"true"}
+      "nssai_sst": {"type":"keyword","index":"true"},
+      "eventid": {"type":"keyword","index":"true"},
+      "stage": {"type":"keyword","index":"true"},
+      "auth_method": {"type":"keyword","index":"true"},
+      "srcregion": {"type":"keyword","index":"true"},
+      "machinename": {"type":"keyword","index":"true"},
+      "public_ip": {"type":"keyword","index":"true"},
+      "public_ipv6": {"type":"keyword","index":"true"},
+      "private_ip": {"type":"keyword","index":"true"},
+      "private_ipv6": {"type":"keyword","index":"true"},
+      "client_ver": {"type":"keyword","index":"true"},
+      "client_os": {"type":"keyword","index":"true"},
+      "client_os_ver": {"type":"keyword","index":"true"},
+      "opaque": {"type":"keyword","index":"true"},
+      "status": {"type":"keyword","index":"true"},
+      "location": {"type":"keyword","index":"true"},
+      "login_duration": {"type":"keyword","index":"true"},
+      "connect_method": {"type":"keyword","index":"true"},
+      "error_code": {"type":"keyword","index":"true"},
+      "portal": {"type":"keyword","index":"true"},
+      "selection_type": {"type":"keyword","index":"true"},
+      "response_time": {"type":"keyword","index":"true"},
+      "priority": {"type":"keyword","index":"true"},
+      "gateway": {"type":"keyword","index":"true"},
+      "vsys_id": {"type":"keyword","index":"true"}
     }
   }
 }
