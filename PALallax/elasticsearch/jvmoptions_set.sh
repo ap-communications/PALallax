@@ -9,7 +9,3 @@ halfmem=${halfmem}m
 #Set heapmemory
 sed -i -e "s/-Xms1g/-Xms$halfmem/g" /etc/elasticsearch/jvm.options > /dev/null
 sed -i -e "s/-Xmx1g/-Xmx$halfmem/g" /etc/elasticsearch/jvm.options > /dev/null
-
-#Set Log4j setting
-setlog4j='-Dlog4j2.formatMsgNoLookups=true'
-sed -i  "\$a #\n# Log4j\n${setlog4j} " /etc/elasticsearch/jvm.options > /dev/null

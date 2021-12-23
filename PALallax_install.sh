@@ -8,7 +8,7 @@ echo `date`
 
 # Version definition
 
-elasticsearch_version="elasticsearch-7.6.0"
+elasticsearch_version="elasticsearch-7.16.2"
 java_version="java-1.8.0"
 curator_version="elasticsearch-curator-5.8.1"
 fluentd_version="td-agent-2.5.0"
