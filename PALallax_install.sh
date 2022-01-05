@@ -8,7 +8,7 @@ echo `date`
 
 # Version definition
 
-elasticsearch_version="elasticsearch-7.6.0"
+elasticsearch_version="elasticsearch-7.16.2"
 java_version="java-1.8.0"
 curator_version="elasticsearch-curator-5.8.1"
 fluentd_version="td-agent-2.5.0"
@@ -151,7 +151,7 @@ echo "====Setting file copy===="
 \cp -pf PALallax/kibana/favicon.ico /usr/share/kibana/src/legacy/ui/public/assets/favicons/favicon.ico
 
 ### Elasticsearch
-echo `PALallax/elasticsearch/heapmemory_set.sh`
+echo `PALallax/elasticsearch/jvmoptions_set.sh`
 wait
 
 \cp -pf PALallax/elasticsearch/config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
@@ -234,7 +234,7 @@ systemctl start kibana.service
 sleep 300s
 systemctl status kibana.service
 
-curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
+echo `curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type: application/json' -d'                                       
 {                                                                                                                                                                     
     "type": "fs",                                                                                                                                                     
     "settings": {                                                                                                                                                     
@@ -242,12 +242,21 @@ curl -X PUT "localhost:9200/_snapshot/PALallax_snapshot?pretty" -H 'Content-Type
         "compress": true                                                                                                                                              
     }                                                                                                                                                                 
 }                                                                                                                                                                     
-'                        
+'`
+
 
 echo `PALallax/PALallax_format.sh`
-wait
+
+sleep 60s
+
+## Kibana Settings
 
 curl -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@PALallax/kibana/export.ndjson
+wait
+
+echo `PALallax/kibana_setting.sh`
+wait
+
 
 ## Logrotate Settings
 

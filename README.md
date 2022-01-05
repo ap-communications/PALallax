@@ -7,8 +7,7 @@ PALallax collects the log of the next-generation firewall, to visualize the traf
 Please see below for details.
 
 + Offical Website:<br>
- English  [http://www.ap-com.co.jp/en/paloalto/palallax/](http://www.ap-com.co.jp/ja/paloalto/palallax/index_en.html) <br>
- Japanese [http://www.ap-com.co.jp/ja/paloalto/palallax/](http://www.ap-com.co.jp/ja/paloalto/palallax/)
+[https://www.ap-com.co.jp/ja/palallax/](https://www.ap-com.co.jp/ja/palallax/)
 
 + Manual:<br>
-[http://www.ap-com.co.jp/ja/paloalto/palallax/manual/index.html](http://www.ap-com.co.jp/ja/paloalto/palallax/manual/index.html)
+[https://www.ap-com.co.jp/ja/palallax/manual/index.html](https://www.ap-com.co.jp/ja/palallax/manual/index.html)
