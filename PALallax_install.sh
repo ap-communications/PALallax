@@ -12,7 +12,8 @@ elasticsearch_version="elasticsearch-7.16.2"
 java_version="java-1.8.0"
 curator_version="elasticsearch-curator-5.8.1"
 fluentd_version="td-agent-2.5.0"
-gem_elastic_version="1.18.2"
+gem_elastic_version="7.16.3"
+gem_fluent_elastic_version="1.18.2"
 gem_polling_version="0.1.5"
 gem_snmp_version="1.2.0"
 gem_fluent_snmp_version="0.0.9"
@@ -102,7 +103,8 @@ yum -y install initscripts
 ## Fluentd Plugin
 echo "====Fluentd Plugin===="
 
-/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_elastic_version
+/opt/td-agent/embedded/bin/fluent-gem install elasticsearch -v $gem_elastic_version
+/opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-elasticsearch -v $gem_fluent_elastic_version
 /opt/td-agent/embedded/bin/fluent-gem install polling  -v $gem_polling_version
 /opt/td-agent/embedded/bin/fluent-gem install snmp -v $gem_snmp_version
 /opt/td-agent/embedded/bin/fluent-gem install fluent-plugin-snmp -v $gem_fluent_snmp_version
