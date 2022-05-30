@@ -7,140 +7,117 @@ exports.Template = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _utils = require("../../../utils");
+
 var _fonts = require("./fonts");
 
 var _styles = require("./styles");
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+var _logo = require("./logo");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /*
- * Licensed to Elasticsearch B.V. under one or more contributor
- * license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright
- * ownership. Elasticsearch B.V. licenses this file to you under
- * the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the Elastic License
+ * 2.0 and the Server Side Public License, v 1; you may not use this file except
+ * in compliance with, at your election, the Elastic License 2.0 or the Server
+ * Side Public License, v 1.
  */
 const Template = ({
   metadata: {
     uiPublicUrl,
     locale,
     darkMode,
+    stylesheetPaths,
     injectedMetadata,
     i18n,
     bootstrapScriptUrl,
     strictCsp
   }
 }) => {
-  return _react.default.createElement("html", {
+  return /*#__PURE__*/_react.default.createElement("html", {
     lang: locale
-  }, _react.default.createElement("head", null, _react.default.createElement("meta", {
+  }, /*#__PURE__*/_react.default.createElement("head", null, /*#__PURE__*/_react.default.createElement("meta", {
     charSet: "utf-8"
-  }), _react.default.createElement("meta", {
+  }), /*#__PURE__*/_react.default.createElement("meta", {
     httpEquiv: "X-UA-Compatible",
     content: "IE=edge,chrome=1"
-  }), _react.default.createElement("meta", {
+  }), /*#__PURE__*/_react.default.createElement("meta", {
     name: "viewport",
     content: "width=device-width"
-  }), _react.default.createElement("title", null, "Kibana"), _react.default.createElement(_fonts.Fonts, {
+  }), /*#__PURE__*/_react.default.createElement("title", null, "PALallax"), /*#__PURE__*/_react.default.createElement(_fonts.Fonts, {
     url: uiPublicUrl
-  }), _react.default.createElement("link", {
-    rel: "apple-touch-icon",
-    sizes: "180x180",
-    href: `${uiPublicUrl}/favicons/apple-touch-icon.png`
-  }), _react.default.createElement("link", {
-    rel: "icon",
+  }), /*#__PURE__*/_react.default.createElement("link", {
+    rel: "alternate icon",
     type: "image/png",
-    sizes: "32x32",
-    href: `${uiPublicUrl}/favicons/favicon-32x32.png`
-  }), _react.default.createElement("link", {
+    href: `${uiPublicUrl}/favicons/favicon.png`
+  }), /*#__PURE__*/_react.default.createElement("link", {
     rel: "icon",
-    type: "image/png",
-    sizes: "16x16",
-    href: `${uiPublicUrl}/favicons/favicon-16x16.png`
-  }), _react.default.createElement("link", {
-    rel: "manifest",
-    href: `${uiPublicUrl}/favicons/manifest.json`
-  }), _react.default.createElement("link", {
-    rel: "mask-icon",
-    color: "#e8488b",
-    href: `${uiPublicUrl}/favicons/safari-pinned-tab.svg`
-  }), _react.default.createElement("link", {
-    rel: "shortcut icon",
-    href: `${uiPublicUrl}/favicons/favicon.ico`
-  }), _react.default.createElement("meta", {
-    name: "msapplication-config",
-    content: `${uiPublicUrl}/favicons/browserconfig.xml`
-  }), _react.default.createElement("meta", {
+    type: "image/svg+xml",
+    href: `${uiPublicUrl}/favicons/favicon.svg`
+  }), /*#__PURE__*/_react.default.createElement("meta", {
     name: "theme-color",
     content: "#ffffff"
-  }), _react.default.createElement(_styles.Styles, {
-    darkMode: darkMode
-  })), _react.default.createElement("body", null, (0, _react.createElement)('kbn-csp', {
+  }), /*#__PURE__*/_react.default.createElement("meta", {
+    name: "color-scheme",
+    content: "light dark"
+  }), /*#__PURE__*/_react.default.createElement("meta", {
+    name: _utils.EUI_STYLES_GLOBAL
+  }), /*#__PURE__*/_react.default.createElement(_styles.Styles, {
+    darkMode: darkMode,
+    stylesheetPaths: stylesheetPaths
+  }), /*#__PURE__*/_react.default.createElement("meta", {
+    name: "add-styles-here"
+  }), /*#__PURE__*/_react.default.createElement("meta", {
+    name: "add-scripts-here"
+  })), /*#__PURE__*/_react.default.createElement("body", null, /*#__PURE__*/(0, _react.createElement)('kbn-csp', {
     data: JSON.stringify({
       strictCsp
     })
-  }), (0, _react.createElement)('kbn-injected-metadata', {
+  }), /*#__PURE__*/(0, _react.createElement)('kbn-injected-metadata', {
     data: JSON.stringify(injectedMetadata)
-  }), _react.default.createElement("div", {
-    className: "kibanaWelcomeView",
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnWelcomeView",
     id: "kbn_loading_message",
     style: {
       display: 'none'
     },
     "data-test-subj": "kbnLoadingMessage"
-  }, _react.default.createElement("div", {
-    className: "kibanaLoaderWrap"
-  }, _react.default.createElement("div", {
-    className: "kibanaLoader"
-  }), _react.default.createElement("div", {
-    className: "kibanaWelcomeLogoCircle"
-  }, _react.default.createElement("div", {
-    className: "kibanaWelcomeLogo"
-  }))), _react.default.createElement("div", {
-    className: "kibanaWelcomeText",
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnLoaderWrap"
+  }, /*#__PURE__*/_react.default.createElement(_logo.Logo, null), /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnWelcomeText",
     "data-error-message": i18n('core.ui.welcomeErrorMessage', {
-      defaultMessage: 'Kibana did not load properly. Check the server output for more information.'
+      defaultMessage: 'Elastic did not load properly. Check the server output for more information.'
     })
   }, i18n('core.ui.welcomeMessage', {
     defaultMessage: 'Loading PALallax'
-  }))), _react.default.createElement("div", {
-    className: "kibanaWelcomeView",
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnProgress"
+  }))), /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnWelcomeView",
     id: "kbn_legacy_browser_error",
     style: {
       display: 'none'
     }
-  }, _react.default.createElement("div", {
-    className: "kibanaLoaderWrap"
-  }, _react.default.createElement("div", {
-    className: "kibanaWelcomeLogoCircle"
-  }, _react.default.createElement("div", {
-    className: "kibanaWelcomeLogo"
-  }))), _react.default.createElement("h2", {
-    className: "kibanaWelcomeTitle"
+  }, /*#__PURE__*/_react.default.createElement(_logo.Logo, null), /*#__PURE__*/_react.default.createElement("h2", {
+    className: "kbnWelcomeTitle"
   }, i18n('core.ui.legacyBrowserTitle', {
     defaultMessage: 'Please upgrade your browser'
-  })), _react.default.createElement("div", {
-    className: "kibanaWelcomeText"
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "kbnWelcomeText"
   }, i18n('core.ui.legacyBrowserMessage', {
-    defaultMessage: 'This Kibana installation has strict security requirements enabled that your current browser does not meet.'
-  }))), _react.default.createElement("script", null, `
+    defaultMessage: 'This Elastic installation has strict security requirements enabled that your current browser does not meet.'
+  }))), /*#__PURE__*/_react.default.createElement("script", null, `
             // Since this is an unsafe inline script, this code will not run
             // in browsers that support content security policy(CSP). This is
             // intentional as we check for the existence of __kbnCspNotEnforced__ in
             // bootstrap.
             window.__kbnCspNotEnforced__ = true;
-          `), _react.default.createElement("script", {
+          `), /*#__PURE__*/_react.default.createElement("script", {
     src: bootstrapScriptUrl
   })));
 };

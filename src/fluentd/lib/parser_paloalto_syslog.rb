@@ -1,44 +1,47 @@
 # coding: utf-8
-# PAN-OS 9.1対応
+
+require 'fluent/parser'
+require 'fluent/output'
+require 'fluent/plugin_helper'
 
 module Fluent
-  class TextParser
-   class PaloSyslogPaser < Parser
+  class PaloSyslogPaser < Output
     Plugin.register_parser('paloalto_syslog', self)
- 
- 
-     def initialize
-       super
-       tag = ""
-     end
- 
-     def configure(conf)
-       super
-     end
- 
-     def parse(text)
-       syslog_value = text.split(/(@.?000\s*.+)/,2)
- 
-       raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
- 
-       if %r{@#000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1]\
-       || %r{@000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1] then
- 
-       logemit(syslog_value)
- 
-       elsif raise "ERR002:syslog format error(version definition error)"
+    helpers :event_emitter
 
- 
-       end
- 
-     end
- 
- 
-     def logemit(syslog_value)
- 
-       record_value = {}
- 
-       field_hash_threat ={
+
+    def initialize
+        super
+        tag = ""
+    end
+
+    def configure(conf)
+        super
+    end
+
+    def parse(text)
+        syslog_value = text.split(/(@.?000\s*.+)/,2)
+
+        raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
+
+        if %r{@#000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1]\
+        || %r{@000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1] then
+
+        logemit(syslog_value)
+
+        elsif raise "ERR002:syslog format error(version definition error)"
+
+
+        end
+
+    end
+
+
+    def logemit(syslog_value)
+
+        record_value = {}
+
+        field_hash_threat ={
         "receive_time" => "@002",
         "serial" => "@003",
         "type" => "@004",
@@ -149,7 +152,7 @@ module Fluent
         "is_saas_of_app" => "@113",
         "sanctioned_state_of_app" => "@114"
         }
- 
+
         field_hash_traffic = {
         "receive_time" => "@#002",
         "serial" => "@#003",
@@ -250,10 +253,9 @@ module Fluent
         "characteristic_of_app" => "@#106",
         "container_of_app" => "@#107",
         "is_saas_of_app" => "@#108",
-        "sanctioned_state_of_app" => "@#109",
-        "subcategory_of_app" => "@#110"
+        "sanctioned_state_of_app" => "@#109"
         }
- 
+
         field_hash_globalprotect ={
         "receive_time" => "@002",
         "serial" => "@003",
@@ -287,217 +289,208 @@ module Fluent
         "connect_method" => "@031",
         "error_code" => "@032",
         "portal" => "@033",
-        "seqno" => "@034",
-        "actionflags" => "@035",
-        "selection_type" => "@036",
-        "response_time" => "@037",
-        "priority" => "@038",
-        "gateway" => "@040",
-        "vsys_name" => "@042",
-        "device_name" => "@043",
-        "vsys_id" => "@044"
- 
+        "selection_type" => "@034",
+        "response_time" => "@035",
+        "priority" => "@036",
+        "gateway" => "@037",
+        "vsys_name" => "@038",
+        "device_name" => "@039",
+        "vsys_id" => "@040"
+
         }
- 
+
         #Threat log parse
         if syslog_value[1].include?("@004:\"THREAT\"") then
- 
-           #Hostname extraction
-           record_value["hostname"] = syslog_value[0].split(" ")[3]
- 
-             field_hash_threat.each{|key, value|
-               record = case value
-                     #receive_time
-                     when "@002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-                     #time_generated
-                     when "@007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-                     #misc
-                     when "@032" then  exception_handling(syslog_value[1],value,"@033")
-                     #user_agent
-                     when "@047" then  exception_handling(syslog_value[1],value,"@048")
-                     #xff
-                     when "@049" then  exception_handling(syslog_value[1],value,"@050")
-                     #referer
-                     when "@050" then  exception_handling(syslog_value[1],value,"@051")
-                     #url_category_list
-                     when "@070" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@070")
-                     when "@071" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@071")
-                     when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
-               end
- 
-               # recordの中身がnullの場合、空白を代入する。
-               # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
-               # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
-               if record == nil || record ==""
-                 record_value["#{key}"] == nil
-               elsif record.class == MatchData then
- 
-               if record[1] == nil || record[1] == "" then
-                 record_value["#{key}"] = nil
-               else
-                 record_value["#{key}"] = record[1]
-               end
- 
-               else
-                 record_value["#{key}"] = record
-               end
- 
-           }
- 
- 
-           #subtypeの内容に応じてmiscのフィールド名を変更
-           unless record_value["subtype_threat"] == /url/i then
-             case record_value["subtype_threat"]
-               when /file/i then
-                     record_value["misc_file"] = record_value["misc_url"]
-                     record_value["misc_url"] = nil
-                 when /virus/i then
-                     record_value["misc_virus"] = record_value["misc_url"]
-                     record_value["misc_url"] = nil
-                 when /wildfire/i then
-                     record_value["misc_wildfire"] = record_value["misc_url"]
-                     record_value["wildfire_result"] = record_value["category"]
-                     record_value["misc_url"] = nil
-                     record_value["category"] = nil
-                 when /vulnerability/i then
-                     record_value["misc_file"] = record_value["misc_url"]
-                     record_value["misc_url"] = nil
-             end
-           end
- 
-           tag = "syslog_threat.palo"
- 
-         #Traffic log parse
-         elsif syslog_value[1].include?("@#004:\"TRAFFIC\"") then
- 
-             #Hostname extraction
-             record_value["hostname"] = syslog_value[0].split(" ")[3]
- 
-             field_hash_traffic.each{|key, value|
- 
-               record =  case value
-                 when "@#002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-                 when "@#007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-                 when "@#036" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-                 when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
-               end
- 
-               # recordの中身がnullの場合、空白を代入する。
-               # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
-               # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
-               if record == nil || record == " " then
-                   record_value["#{key}"] == nil
-               elsif record.class == MatchData then
-                   if record[1] == nil || record[1] == "" then
-                       record_value["#{key}"] = nil
-                   else
-                       record_value["#{key}"] = record[1]
-                   end
-               else
-                   record_value["#{key}"] = record
-               end
- 
+
+            #Hostname extraction
+            record_value["hostname"] = syslog_value[0].split(" ")[3]
+
+            field_hash_threat.each{|key, value|
+                record = case value
+                    #receive_time
+                    when "@002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                    #time_generated
+                    when "@007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                    #misc
+                    when "@032" then  exception_handling(syslog_value[1],value,"@033")
+                    #user_agent
+                    when "@047" then  exception_handling(syslog_value[1],value,"@048")
+                    #xff
+                    when "@049" then  exception_handling(syslog_value[1],value,"@050")
+                    #referer
+                    when "@050" then  exception_handling(syslog_value[1],value,"@051")
+                    #url_category_list
+                    when "@070" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@070")
+                    when "@071" then  perse_category_list(syslog_value[1],value,"@070","@072") if syslog_value[1].include?("@071")
+                    when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
+                end
+
+                # recordの中身がnullの場合、空白を代入する。
+                # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
+                # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
+                if record == nil || record ==""
+                record_value["#{key}"] == nil
+                elsif record.class == MatchData then
+
+                if record[1] == nil || record[1] == "" then
+                record_value["#{key}"] = nil
+                else
+                record_value["#{key}"] = record[1]
+                end
+
+                else
+                record_value["#{key}"] = record
+                end
+
             }
- 
- 
-         tag = "syslog_traffic.palo"
- 
-         #GlobalProtect log parse
-         elsif syslog_value[1].include?("@#006:\"GLOBALPROTECT\"") then
- 
-           #Hostname extraction
-           record_value["hostname"] = syslog_value[0].split(" ")[3]
- 
-           field_hash_globalprotect.each{|key, value|
- 
-             record =  case value
-               when "@#002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-               when "@#007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
-               when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
-             end
- 
-             # recordの中身がnullの場合、空白を代入する。
-             # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
-             # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
-             if record == nil || record == " " then
-                 record_value["#{key}"] == nil
-             elsif record.class == MatchData then
-                 if record[1] == nil || record[1] == "" then
-                     record_value["#{key}"] = nil
-                 else
-                     record_value["#{key}"] = record[1]
-                 end
-             else
-                 record_value["#{key}"] = record
-             end
- 
-           }
- 
-         tag = "syslog_globalprotect.palo"
- 
-         else
-          raise "ERR003:syslog format error(type definition error)"
-         end
- 
- 
-     #debug
-     #record_value["debug"] = syslog_value
- 
- 
-      #Log emit
-      time = Engine.now
-      Engine.emit(tag, time, record_value)
- 
-     end
- 
- 
- 
-     def time_transformation(syslog_time)
-       require 'time'
-       Time.parse(syslog_time).to_i
-     end
- 
-     #正規表現での抽出で例外が発生する可能性があるフィールドは例外処理をする
-     def exception_handling(syslog_value,value,word)
- 
-         #処理対象フィールドの開始位置取得
-         word_start = syslog_value.index("#{value}")
-         #処理対象フィールドの終了位置取得（次のフィールドの開始位置取得）
-         word_end  = syslog_value.index("#{word}")
-         #処理対象フィールドの文字数計算
-         position  = word_end - word_start
- 
- 
-         #先頭のダブルクォートの数に応じて取得する位置を変更する
-         #ダブルクオートが先頭2つの場合
-         if syslog_value.include?("#{value}:\"\"\"") then
-             splitdata = syslog_value[word_start + 8,position - 12]
-         #ダブルクオートが先頭3つの場合
-         elsif syslog_value.include?("#{value}:\"\"") then
-             splitdata = syslog_value[word_start + 7,position - 10]
-         #ダブルクオートが先頭1つの場合
-         elsif syslog_value.include?("#{value}:\"") then
-             splitdata = syslog_value[word_start + 6,position - 8]
-         else
-             return nil
-         end
- 
-         if splitdata != nil
-             splitdata.lstrip!
-         end
- 
-         return splitdata
-     end
-     
-     def perse_category_list(syslog_value,value,list_value,word)
+
+
+            #subtypeの内容に応じてmiscのフィールド名を変更
+            unless record_value["subtype_threat"] == /url/i then
+            case record_value["subtype_threat"]
+                when /file/i then
+                    record_value["misc_file"] = record_value["misc_url"]
+                    record_value["misc_url"] = nil
+                when /virus/i then
+                    record_value["misc_virus"] = record_value["misc_url"]
+                    record_value["misc_url"] = nil
+                when /wildfire/i then
+                    record_value["misc_wildfire"] = record_value["misc_url"]
+                    record_value["wildfire_result"] = record_value["category"]
+                    record_value["misc_url"] = nil
+                    record_value["category"] = nil
+                when /vulnerability/i then
+                    record_value["misc_file"] = record_value["misc_url"]
+                    record_value["misc_url"] = nil
+            end
+            end
+
+            tag = "syslog_threat.palo"
+
+        #Traffic log parse
+        elsif syslog_value[1].include?("@#004:\"TRAFFIC\"") then
+
+            #Hostname extraction
+            record_value["hostname"] = syslog_value[0].split(" ")[3]
+
+            field_hash_traffic.each{|key, value|
+
+                record =  case value
+                when "@#002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                when "@#007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                when "@#036" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
+                end
+
+                # recordの中身がnullの場合、空白を代入する。
+                # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
+                # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
+                if record == nil || record == " " then
+                    record_value["#{key}"] == nil
+                elsif record.class == MatchData then
+                    if record[1] == nil || record[1] == "" then
+                        record_value["#{key}"] = nil
+                    else
+                        record_value["#{key}"] = record[1]
+                    end
+                else
+                    record_value["#{key}"] = record
+                end
+
+            }
+
+
+        tag = "syslog_traffic.palo"
+
+        #GlobalProtect log parse
+        elsif syslog_value[1].include?("@#006:\"GLOBALPROTECT\"") then
+
+            #Hostname extraction
+            record_value["hostname"] = syslog_value[0].split(" ")[3]
+
+            field_hash_globalprotect.each{|key, value|
+
+            record =  case value
+                when "@#002" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                when "@#007" then  time_transformation(syslog_value[1].match(%r{#{value}:\s*"(.*?)"})[1])
+                when value then  syslog_value[1].match(%r{#{value}:\s*"(.*?)"})
+            end
+
+            # recordの中身がnullの場合、空白を代入する。
+            # recordのclassがMatchDataの場合、record配列の[1]をrecord_valueに代入する。（record[1]でMatchメソッドで取得した値が取得可能）
+            # classがMatchDataではない場合、record変数には時間情報が代入されているため、record_valueにそのままrecordの値を代入する。
+            if record == nil || record == " " then
+                record_value["#{key}"] == nil
+            elsif record.class == MatchData then
+                if record[1] == nil || record[1] == "" then
+                    record_value["#{key}"] = nil
+                else
+                    record_value["#{key}"] = record[1]
+                end
+            else
+                record_value["#{key}"] = record
+            end
+
+            }
+
+        tag = "syslog_globalprotect.palo"
+
+        else
+        raise "ERR003:syslog format error(type definition error)"
+        end
+
+        #Log emit
+        time = Fluent::Engine.now
+        router.emit(tag, time, record_value)
+
+    end
+
+    def time_transformation(syslog_time)
+        require 'time'
+        Time.parse(syslog_time).to_i
+    end
+
+    #正規表現での抽出で例外が発生する可能性があるフィールドは例外処理をする
+    def exception_handling(syslog_value,value,word)
+
+        #処理対象フィールドの開始位置取得
+        word_start = syslog_value.index("#{value}")
+        #処理対象フィールドの終了位置取得（次のフィールドの開始位置取得）
+        word_end  = syslog_value.index("#{word}")
+        #処理対象フィールドの文字数計算
+        position  = word_end - word_start
+
+
+        #先頭のダブルクォートの数に応じて取得する位置を変更する
+        #ダブルクオートが先頭2つの場合
+        if syslog_value.include?("#{value}:\"\"\"") then
+            splitdata = syslog_value[word_start + 8,position - 12]
+        #ダブルクオートが先頭3つの場合
+        elsif syslog_value.include?("#{value}:\"\"") then
+            splitdata = syslog_value[word_start + 7,position - 10]
+        #ダブルクオートが先頭1つの場合
+        elsif syslog_value.include?("#{value}:\"") then
+            splitdata = syslog_value[word_start + 6,position - 8]
+        else
+            return nil
+        end
+
+        if splitdata != nil
+            splitdata.lstrip!
+        end
+
+        return splitdata
+    end
+    
+    def perse_category_list(syslog_value,value,list_value,word)
         word_start = syslog_value.index("#{list_value}")
         word_end  = syslog_value.index("#{word}")
         position  = word_end - word_start
 
         if syslog_value.include?("#{list_value}:\"\"")
-          category_list = syslog_value[word_start + 7,position - 10]
+        category_list = syslog_value[word_start + 7,position - 10]
         elsif syslog_value.include?("#{list_value}:\"") then
-          category_list = syslog_value[word_start + 6,position - 8]
+        category_list = syslog_value[word_start + 6,position - 8]
         else
             return nil
         end
@@ -508,12 +501,11 @@ module Fluent
         end
         
         if splitdata != nil
-          splitdata.lstrip!
+        splitdata.lstrip!
         end
 
         return splitdata
-     end
+    end
 
-   end
   end
- end
+end
