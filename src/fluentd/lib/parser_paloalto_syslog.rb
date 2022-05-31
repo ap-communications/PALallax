@@ -24,8 +24,8 @@ module Fluent
 
         raise "ERR001:syslog format error(no syslog value)" if syslog_value[1].nil?
 
-        if %r{@#000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1]\
-        || %r{@000:\s?\"os([89]|1[0]).[01]\"} === syslog_value[1] then
+        if %r{@#000:\s?\"os([89]|1[0]).[012]\"} === syslog_value[1]\
+        || %r{@000:\s?\"os([89]|1[0]).[012]\"} === syslog_value[1] then
 
         logemit(syslog_value)
 
@@ -150,7 +150,8 @@ module Fluent
         "characteristic_of_app" => "@111",
         "container_of_app" => "@112",
         "is_saas_of_app" => "@113",
-        "sanctioned_state_of_app" => "@114"
+        "sanctioned_state_of_app" => "@114",
+        "cloud_reportid" => "@115"
         }
 
         field_hash_traffic = {
@@ -253,7 +254,8 @@ module Fluent
         "characteristic_of_app" => "@#106",
         "container_of_app" => "@#107",
         "is_saas_of_app" => "@#108",
-        "sanctioned_state_of_app" => "@#109"
+        "sanctioned_state_of_app" => "@#109",
+        "offloaded" => "@#110"
         }
 
         field_hash_globalprotect ={
@@ -295,7 +297,9 @@ module Fluent
         "gateway" => "@037",
         "vsys_name" => "@038",
         "device_name" => "@039",
-        "vsys_id" => "@040"
+        "vsys_id" => "@040",
+        "error" => "@041",
+        "attempted_gateways" => "@042"
 
         }
 

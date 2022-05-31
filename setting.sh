@@ -767,7 +767,10 @@ curl --cacert /etc/elasticsearch/certs/ca/ca.crt -u elastic:$ES_PASS -XPUT "http
       "priority": {"type":"keyword","index":"true"},
       "gateway": {"type":"keyword","index":"true"},
       "vsys_id": {"type":"keyword","index":"true"},
-      "cloud_reportid": {"type":"keyword","index":"true"}
+      "offloaded": {"type":"keyword","index":"true"},
+      "cloud_reportid": {"type":"keyword","index":"true"},
+      "error": {"type":"keyword","index":"true"},
+      "attempted_gateways": {"type":"keyword","index":"true"}
     }
   }
 }
