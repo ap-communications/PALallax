@@ -15,6 +15,9 @@ module Fluent
         tag = ""
     end
 
+    desc "Settign Timezone"
+    config_param :time_zone, :string
+
     def configure(conf)
         super
     end
@@ -451,6 +454,7 @@ module Fluent
 
     def time_transformation(syslog_time)
         require 'time'
+        ENV['TZ'] = time_zone
         Time.parse(syslog_time).to_i
     end
 
