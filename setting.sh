@@ -728,8 +728,8 @@ curl --cacert /etc/elasticsearch/certs/ca/ca.crt -u elastic:$ES_PASS -XPUT "http
       "dst_dag": {"type":"keyword","index":"true"},
       "session_owner": {"type":"keyword","index":"true"},
       "high_res_timestamp": {"type":"date","format":"strict_date_optional_time"},
-      "nsdsai_sst": {"type":"keyword","index":"true"},
-      "nsdsai_sd": {"type":"keyword","index":"true"},
+      "nssai_sst": {"type":"keyword","index":"true"},
+      "nssai_sd": {"type":"keyword","index":"true"},
       "subcategory_of_app": {"type":"keyword","index":"true"},
       "category_of_app": {"type":"keyword","index":"true"},
       "technology_of_app": {"type":"keyword","index":"true"},
@@ -742,7 +742,6 @@ curl --cacert /etc/elasticsearch/certs/ca/ca.crt -u elastic:$ES_PASS -XPUT "http
       "partial_hash": {"type":"keyword","index":"true"},
       "reason": {"type":"keyword","index":"true"},
       "justification": {"type":"keyword","index":"true"},
-      "nssai_sst": {"type":"keyword","index":"true"},
       "eventid": {"type":"keyword","index":"true"},
       "stage": {"type":"keyword","index":"true"},
       "auth_method": {"type":"keyword","index":"true"},
@@ -860,3 +859,8 @@ curl --cacert /etc/elasticsearch/certs/ca/ca.crt -u elastic:$ES_PASS -XPUT "http
    }
  }
  '
+
+echo " "
+echo "**********************"
+echo "Setting completed."
+echo "**********************"
