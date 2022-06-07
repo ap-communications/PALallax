@@ -18,6 +18,8 @@ gem_fluent_elastic_version="5.1.4"
 
 echo "====Preparation===="
 
+read -rp 'Setting time zone: ' TIME_ZONE
+
 mkdir /var/log/APC
 chown syslog:adm /var/log/APC
 chmod 755 /var/log/APC
@@ -63,8 +65,6 @@ echo "====Fluentd Plugin===="
 td-agent-gem install elasticsearch -v $gem_elastic_version
 td-agent-gem install fluent-plugin-elasticsearch -v $gem_fluent_elastic_version
  
- 
-
 ## Setting file copy
 echo "====Setting file copy===="
 
@@ -101,6 +101,7 @@ chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 sed -i -e "s/User=td-agent/User=root/g" /lib/systemd/system/td-agent.service
 sed -i -e "s/Group=td-agent/Group=root/g" /lib/systemd/system/td-agent.service
 
+sed -i -e "s/time_zone 0/time_zone $TIME_ZONE/g" /etc/td-agent/td-agent.conf
 
 
 ## ufw check

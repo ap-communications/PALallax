@@ -15,8 +15,8 @@ module Fluent
         tag = ""
     end
 
-    desc "Settign Timezone"
-    config_param :time_zone, :string
+    desc "Setting Timezone"
+    config_param :palo_time_zone, :integer, default: 0
 
     def configure(conf)
         super
@@ -41,7 +41,7 @@ module Fluent
 
 
     def logemit(syslog_value)
-
+        ENV['TZ'] = "UTC"
         record_value = {}
 
         field_hash_threat ={
@@ -454,8 +454,8 @@ module Fluent
 
     def time_transformation(syslog_time)
         require 'time'
-        ENV['TZ'] = time_zone
-        Time.parse(syslog_time).to_i
+        t = Time.parse(syslog_time) + (palo_time_zone * -3600)
+        t.to_i
     end
 
     #正規表現での抽出で例外が発生する可能性があるフィールドは例外処理をする
