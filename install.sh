@@ -20,13 +20,18 @@ echo "====Preparation===="
 
 read -rp 'Setting time zone: ' TIME_ZONE
 
-mkdir /var/log/APC
-chown syslog:adm /var/log/APC
-chmod 755 /var/log/APC
+install -m 755 -o syslog -g adm -d /var/log/APC
 mkdir -p /opt/APC/fluentd/lib
 mkdir -p /opt/APC/elasticsearch
 mkdir /var/lib/fluentd_buffer
 mkdir -p /var/log/kibana
+
+cp src/system/forti_log /etc/logrotate.d/
+cp src/system/palo_log /etc/logrotate.d/
+cp src/system/nozomi_log /etc/logrotate.d/
+cp src/system/kibana_log /etc/logrotate.d/
+cp src/system/agent_log /etc/logrotate.d/
+cp src/system/nginx_log /etc/logrotate.d/
 
 
 cp -p /etc/rsyslog.conf /etc/rsyslog.conf.`date '+%Y%m%d'`
@@ -97,6 +102,10 @@ chown elasticsearch:elasticsearch /var/lib/elasticsearch/
 \cp -pf src/fluentd/lib/parser_fortigate_syslog.rb /etc/td-agent/plugin/parser_fortigate_syslog.rb
 \cp -pf src/fluentd/lib/parser_paloalto_syslog.rb /etc/td-agent/plugin/parser_paloalto_syslog.rb
 \cp -pf src/fluentd/lib/parser_nozomi_syslog.rb /etc/td-agent/plugin/parser_nozomi_syslog.rb
+
+install -m 640 -o syslog -g adm /dev/null /var/log/APC/forti.log
+install -m 640 -o syslog -g adm /dev/null /var/log/APC/palo.log
+install -m 640 -o syslog -g adm /dev/null /var/log/APC/nozomi.log
 
 sed -i -e "s/User=td-agent/User=root/g" /lib/systemd/system/td-agent.service
 sed -i -e "s/Group=td-agent/Group=root/g" /lib/systemd/system/td-agent.service
