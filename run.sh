@@ -5,7 +5,7 @@ echo " "
 echo "**********************"
 echo "Starting td-agent."
 echo "**********************"
-systemctl start td-agent.service
+systemctl restart td-agent.service
 systemctl status td-agent.service
 
 echo " "

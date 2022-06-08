@@ -30,7 +30,7 @@ cp src/system/forti_log /etc/logrotate.d/
 cp src/system/palo_log /etc/logrotate.d/
 cp src/system/nozomi_log /etc/logrotate.d/
 cp src/system/kibana_log /etc/logrotate.d/
-cp src/system/agent_log /etc/logrotate.d/
+cp src/system/td-agent_log /etc/logrotate.d/
 cp src/system/nginx_log /etc/logrotate.d/
 
 
