@@ -24,6 +24,10 @@ module Fluent
     config_param :nozomi_host, :string
     config_param :nozomi_user, :string
     config_param :nozomi_pass, :string, secret: true
+    desc "Setting Timezone"
+    config_param :nozomi_time_zone, :integer, default: 0
+
+    ENV['TZ'] = "UTC"
     
     def configure(conf)
         super
@@ -32,7 +36,7 @@ module Fluent
     def parse(text)
         record_value = {}
         sp_value = text.split(/\A(\w{3}\s+\d{1,2}\s\d{2}:\d{2}:\d{2})\s(.*)\s(.*):\sCEF:/)
-        record_value["receive_time"] = convert_date_to_epoch(sp_value[1]) #Feb 20 18:29:26
+        record_value["receive_time"] = time_transformation(sp_value[1]) #Feb 20 18:29:26
         record_value["hostname"] = sp_value[2] #nozomi-n2os.local
         record_value["event"] = sp_value[3] #n2osevents[0]
 
@@ -136,9 +140,10 @@ module Fluent
     end
   
   
-    def convert_date_to_epoch(time)
+    def time_transformation(syslog_time)
       require 'time'
-      Time.parse(time).to_i
+      t = Time.parse(syslog_time) + (nozomi_time_zone * -3600)
+      t.to_i
     end
       
     def sync_alert(incident_id) 
