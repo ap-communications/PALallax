@@ -1,4 +1,4 @@
-src/fluentd/lib/parser_paloalto_syslog.rb# coding: utf-8
+# coding: utf-8
 
 require 'fluent/parser'
 require 'fluent/output'
