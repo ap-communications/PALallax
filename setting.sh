@@ -131,6 +131,7 @@ curl --cacert /etc/elasticsearch/certs/ca/ca.crt -u elastic:$ES_PASS -XPUT "http
       }],
      "properties": {
       "receive_time": {"type":"date","format":"strict_date_optional_time||epoch_second"},
+      "eventtime": {"type":"date","format":"strict_date_optional_time||epoch_second"},
       "appact" : {"type":"keyword","index":"true"},
       "action" : {"type":"keyword","index":"true"},
       "attackid" : {"type":"integer","index":"true"},

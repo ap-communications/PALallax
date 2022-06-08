@@ -1,4 +1,4 @@
-# coding: utf-8
+src/fluentd/lib/parser_paloalto_syslog.rb# coding: utf-8
 
 require 'fluent/parser'
 require 'fluent/output'
@@ -17,6 +17,8 @@ module Fluent
 
     desc "Setting Timezone"
     config_param :palo_time_zone, :integer, default: 0
+
+    ENV['TZ'] = "UTC"
 
     def configure(conf)
         super
@@ -41,7 +43,6 @@ module Fluent
 
 
     def logemit(syslog_value)
-        ENV['TZ'] = "UTC"
         record_value = {}
 
         field_hash_threat ={
@@ -286,22 +287,22 @@ module Fluent
         "client_os_ver" => "@024",
         "repeatcnt" => "@025",
         "reason" => "@026",
-        "opaque" => "@027",
-        "status" => "@028",
-        "location" => "@029",
-        "login_duration" => "@030",
-        "connect_method" => "@031",
-        "error_code" => "@032",
-        "portal" => "@033",
-        "selection_type" => "@034",
-        "response_time" => "@035",
-        "priority" => "@036",
-        "gateway" => "@037",
-        "vsys_name" => "@038",
-        "device_name" => "@039",
-        "vsys_id" => "@040",
-        "error" => "@041",
-        "attempted_gateways" => "@042"
+        "error" => "@027",
+        "opaque" => "@028",
+        "status" => "@029",
+        "location" => "@030",
+        "login_duration" => "@031",
+        "connect_method" => "@032",
+        "error_code" => "@033",
+        "portal" => "@034",
+        "selection_type" => "@035",
+        "response_time" => "@036",
+        "priority" => "@037",
+        "attempted_gateways" => "@038",
+        "gateway" => "@039",
+        "vsys_name" => "@040",
+        "device_name" => "@041",
+        "vsys_id" => "@042",
 
         }
 

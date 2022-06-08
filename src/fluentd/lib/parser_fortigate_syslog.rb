@@ -15,6 +15,11 @@ module Fluent
       tag = ""
     end
 
+    desc "Setting Timezone"
+    config_param :forti_time_zone, :integer, default: 0
+
+    ENV['TZ'] = "UTC"
+
     def configure(conf)
       super
     end
@@ -82,7 +87,8 @@ module Fluent
 
     def time_transformation(syslog_time)
       require 'time'
-      Time.parse(syslog_time).to_i
+      t = Time.parse(syslog_time) + (forti_time_zone * -3600)
+      t.to_i
     end
 
  end
